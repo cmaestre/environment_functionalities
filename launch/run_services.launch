@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+
+  <rosparam command="load" file="$(find environment_functionalities)/src/parameters.yaml"  />
+
+  <node name="get_object_state_service" pkg="environment_functionalities" type="get_object_state_service" output="screen" />
+
+  <node name="restart_environment_service" pkg="environment_functionalities" type="restart_environment_service" output="screen" /> 
+
+</launch>
