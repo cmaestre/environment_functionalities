@@ -40,8 +40,36 @@ int restart_environment(environment_functionalities::RestartWorld::Request &req,
 
             //spawn the table then the cube
             ROS_INFO("SPAWN");
+
+            geometry_msgs::Pose table_pose;
+            table_pose.position.x = 0.7;
+            table_pose.position.y = 0.0;
+            table_pose.position.z = -0.93;
+            double roll = 0.0;
+            double pitch = 0.0;
+            double yaw = 1.5707;
+            tf::Quaternion tmp_orientation;
+            tmp_orientation.setRPY(roll,
+                                   pitch,
+                                   yaw);
+            table_pose.orientation.w = tmp_orientation.getW();
+            table_pose.orientation.x = tmp_orientation.getX();
+            table_pose.orientation.y = tmp_orientation.getY();
+            table_pose.orientation.z = tmp_orientation.getZ();
+
             std::string project_name = env_values.get_project_name();
-            bool spawn_res = spawn_environment(gazebo_spawn_clt, nh, project_name);
+            std::string table = "table";
+            bool spawn_res = spawn_model(table,
+                                         gazebo_spawn_clt,
+                                         table_pose,
+                                         project_name);
+            if (!spawn_res){
+                ROS_ERROR_STREAM("restart_environment : Problem spawning models");
+                res.success = false;
+                return 0;
+            }
+
+            spawn_res = spawn_environment(gazebo_spawn_clt, nh, project_name);
             if (!spawn_res){
                 ROS_ERROR_STREAM("restart_environment : Problem spawning models");
                 res.success = false;

@@ -12,15 +12,15 @@ bool spawn_environment(ros::ServiceClient& spawner,
                        ros::NodeHandle nh,
                        std::string project_name){
     std::vector<std::string> object_name_vector;
-    nh.getParam("object_name_vector", object_name_vector);
+    nh.getParam("obj_name_vector", object_name_vector);
     int nb_models = object_name_vector.size();
     std::string current_model;
     for(int pos=0; pos < nb_models; pos++){
         current_model = object_name_vector[pos];
         geometry_msgs::Pose current_model_pose;
-        if ((std::strcmp(current_model.c_str(), "table") == 0) || 
-           (std::strcmp(current_model.c_str(), "cube") == 0) || 
-           (std::strcmp(current_model.c_str(), "cylinder") == 0)) {
+        if ((std::strcmp(current_model.c_str(), "cube") == 0) ||
+           (std::strcmp(current_model.c_str(), "cylinder") == 0) ||
+           (std::strcmp(current_model.c_str(), "bucket") == 0)) {
             current_model_pose = get_model_pose(nh, current_model);
         } else {
             ROS_ERROR_STREAM("spawn_environment method : unknown model " << current_model);
@@ -79,34 +79,36 @@ bool spawn_model(std::string& model_to_spawn,
 geometry_msgs::Pose get_model_pose(ros::NodeHandle nh,
                                     std::string model_name){
     geometry_msgs::Pose object_pose;
-    nh.getParam("/object_pos_vector/" + model_name + "/pose/x", object_pose.position.x);
-    nh.getParam("/object_pos_vector/" + model_name + "/pose/y", object_pose.position.y);
-    nh.getParam("/object_pos_vector/" + model_name + "/pose/z", object_pose.position.z);
-    if (strcmp(model_name.c_str(), "table") == 0) {
-        tf::Quaternion tmp_orientation;
-        double roll, pitch, yaw;
-        nh.getParam("/object_pos_vector/" + model_name + "/orientation/roll", roll);
-        nh.getParam("/object_pos_vector/" + model_name + "/orientation/pitch", pitch);
-        nh.getParam("/object_pos_vector/" + model_name + "/orientation/yaw", yaw);
-        tmp_orientation.setRPY(roll,
-                               pitch,
-                               yaw);
-        object_pose.orientation.w = tmp_orientation.getW();
-        object_pose.orientation.x = tmp_orientation.getX();
-        object_pose.orientation.y = tmp_orientation.getY();
-        object_pose.orientation.z = tmp_orientation.getZ();
+    nh.getParam("/obj_pos_vector/" + model_name + "/x", object_pose.position.x);
+    nh.getParam("/obj_pos_vector/" + model_name + "/y", object_pose.position.y);
+    nh.getParam("/obj_pos_vector/" + model_name + "/z", object_pose.position.z);
+//    if (strcmp(model_name.c_str(), "table") == 0) {
+//        tf::Quaternion tmp_orientation;
+//        double roll, pitch, yaw;
+//        nh.getParam("/obj_orien_vector/" + model_name + "/roll", roll);
+//        nh.getParam("/obj_orien_vector/" + model_name + "/pitch", pitch);
+//        nh.getParam("/obj_orien_vector/" + model_name + "/yaw", yaw);
+//        tmp_orientation.setRPY(roll,
+//                               pitch,
+//                               yaw);
+//        object_pose.orientation.w = tmp_orientation.getW();
+//        object_pose.orientation.x = tmp_orientation.getX();
+//        object_pose.orientation.y = tmp_orientation.getY();
+//        object_pose.orientation.z = tmp_orientation.getZ();
 
-    } else if (strcmp(model_name.c_str(), "cube") == 0) {
-        double orien_w, orien_x, orien_y, orien_z;
-        nh.getParam("/object_pos_vector/" + model_name + "/orientation/w", orien_w);
-        nh.getParam("/object_pos_vector/" + model_name + "/orientation/x", orien_x);
-        nh.getParam("/object_pos_vector/" + model_name + "/orientation/y", orien_y);
-        nh.getParam("/object_pos_vector/" + model_name + "/orientation/z", orien_z);
-        object_pose.orientation.w = orien_w;
-        object_pose.orientation.x = orien_x;
-        object_pose.orientation.y = orien_y;
-        object_pose.orientation.z = orien_z;
-    }
+////    } else if (strcmp(model_name.c_str(), "cube") == 0) {
+//    } else {
+    double orien_w, orien_x, orien_y, orien_z;
+    nh.getParam("/obj_orien_vector/" + model_name + "/w", orien_w);
+    nh.getParam("/obj_orien_vector/" + model_name + "/x", orien_x);
+    nh.getParam("/obj_orien_vector/" + model_name + "/y", orien_y);
+    nh.getParam("/obj_orien_vector/" + model_name + "/z", orien_z);
+    object_pose.orientation.w = orien_w;
+    object_pose.orientation.x = orien_x;
+    object_pose.orientation.y = orien_y;
+    object_pose.orientation.z = orien_z;
+//    }
+
     return object_pose;
 }
 
@@ -118,8 +120,9 @@ geometry_msgs::Pose get_model_pose(ros::NodeHandle nh,
  */
 bool remove_environment(ros::ServiceClient& gazebo_model_delete,
                         ros::NodeHandle nh){
-    std::vector<std::string> object_name_vector;
-    nh.getParam("object_name_vector", object_name_vector);
+    std::vector<std::string> object_name_vector;   
+    nh.getParam("obj_name_vector", object_name_vector);
+    object_name_vector.push_back("table");
     int nb_models = object_name_vector.size();
     std::string current_model;
     for(int pos=0; pos < nb_models; pos++){
@@ -141,7 +144,8 @@ bool remove_model(std::string model_name,
     gazebo_msgs::DeleteModel delete_model;
     if ((std::strcmp(current_model.c_str(), "table") == 0) || 
        (std::strcmp(current_model.c_str(), "cube") == 0) || 
-       (std::strcmp(current_model.c_str(), "cylinder") == 0)) {
+       (std::strcmp(current_model.c_str(), "cylinder") == 0) ||
+       (std::strcmp(current_model.c_str(), "bucket") == 0)) {
         delete_model.request.model_name = model_name;
     } else {
         ROS_ERROR_STREAM("remove_model method : unknown model " << current_model);

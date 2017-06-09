@@ -24,7 +24,7 @@ public:
         return project_name;
     }
 
-    std::vector<std::string> cube_sides = {"right", "left", "up", "down", "no_side"}; //the enumeration is ordinated to link cube side with corresponding outside point
+    std::vector<std::string> cube_sides = {"right", "left", "up", "down", "no_side"}; //the enumeration is ordered to link cube side with corresponding outside point
     std::vector<std::string> mid_points = {"right_mid", "left_mid", "front_mid", "back_mid"};
 
     std::string get_cube_side_value (int pos){
