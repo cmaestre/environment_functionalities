@@ -20,7 +20,8 @@ bool spawn_environment(ros::ServiceClient& spawner,
         geometry_msgs::Pose current_model_pose;
         if ((std::strcmp(current_model.c_str(), "cube") == 0) ||
            (std::strcmp(current_model.c_str(), "cylinder") == 0) ||
-           (std::strcmp(current_model.c_str(), "bucket") == 0)) {
+           (std::strcmp(current_model.c_str(), "bucket") == 0) ||
+            (std::strcmp(current_model.c_str(), "cube_long") == 0)) {
             current_model_pose = get_model_pose(nh, current_model);
         } else {
             ROS_ERROR_STREAM("spawn_environment method : unknown model " << current_model);
@@ -145,7 +146,8 @@ bool remove_model(std::string model_name,
     if ((std::strcmp(current_model.c_str(), "table") == 0) || 
        (std::strcmp(current_model.c_str(), "cube") == 0) || 
        (std::strcmp(current_model.c_str(), "cylinder") == 0) ||
-       (std::strcmp(current_model.c_str(), "bucket") == 0)) {
+       (std::strcmp(current_model.c_str(), "bucket") == 0) ||
+            (std::strcmp(current_model.c_str(), "cube_long") == 0)) {
         delete_model.request.model_name = model_name;
     } else {
         ROS_ERROR_STREAM("remove_model method : unknown model " << current_model);
