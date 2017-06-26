@@ -1,2 +1,4 @@
-obj_name_vector: ["table", "cube"]
-obj_pos_vector: {cube: {pose: {x: 0.65, y: 0.1, z: -0.1}, orientation: {w: 0.0, x: 0.0, y: 0.0, z: 0.0}}, table: {pose: {x: 0.7, y: 0, z: -0.93}, orientation: {roll: 0, pitch: 0, yaw: 1.5707}}}
+obj_name_vector: ["cube"] ## table is loaded by default
+obj_pos_vector: {cube: {x: 0.65, y: 0.1, z: -0.1}}
+obj_orien_vector: {cube: {w: 0.0, x: 0.0, y: 0.0, z: 0.0}}
+obj_size_vector: {cube: {x: 0.05, y: 0.05, z: 0.05}}
